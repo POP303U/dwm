@@ -1,3 +1,4 @@
+#include <X11/XF86keysym.h>
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
@@ -52,8 +53,15 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "kitty", NULL };
+static const char *termcmd[]  = { "st", NULL };
+static const char *filecmd[]  = { "thunar", NULL };
+static const char *browsercmd[]  = { "brave", NULL };
+static const char *docscmd[]  = { "rustup", "doc" , NULL };
+static const char *volupcmd[]      = { "/usr/bin/amixer",  "set", "Master", "5%+", NULL };
+static const char *voldowncmd[]    = { "/usr/bin/amixer",  "set", "Master", "5%-", NULL };
+static const char *mutecmd[]    = { "/usr/bin/amixer", "set", "Master", "toggle", NULL };
 
+/* Add to keys[] array. With 0 as modifier, you are able to use the keys directly. */
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
@@ -69,6 +77,11 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
 
+    /* programs */
+	{ MODKEY|ShiftMask,             XK_d,      spawn,          {.v = docscmd } },
+	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = filecmd } },
+	{ MODKEY|ShiftMask,             XK_w,      spawn,          {.v = browsercmd } },
+
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
@@ -81,6 +94,12 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+
+    /* Audio control */
+    { MODKEY,                       XK_F10, spawn,        {.v = voldowncmd } },
+    { MODKEY,                       XK_F11, spawn,        {.v = volupcmd } },
+    { MODKEY,                       XK_F12, spawn,        {.v = mutecmd } },
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
